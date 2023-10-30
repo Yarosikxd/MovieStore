@@ -1,0 +1,47 @@
+﻿@page "/AddNewActor"
+@using Domain.Models
+@using Application.Service.ActorSerice
+@inject ActorService actorService
+@inject NavigationManager NavigationManager
+
+<h3>Add New Actor</h3>
+<hr />
+
+<form>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="for-group">
+                <label for="Name" class="control-label">FullName</label>
+                <input form="FullName" class="form-control" @bind="@obj.FullName" />
+            </div>
+
+            <div class="for-group">
+                <label for="Bio" class="control-label">Bio</label>
+                <input form="Dio" class="form-control" @bind="@obj.Bio" />
+            </div>
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <input type="button" class="btn btn-primary btn-sm" @onclick="@CreateNewActorAsync" value="Save Actor" />
+                <input type="button" class="btn btn-danger btn-sm" @onclick="@Cancel" value="Cancel" />
+            </div>
+        </div>
+    </div>
+</form>
+
+
+@code {
+    public Actor obj = new Actor();
+    protected async void CreateNewActorAsync()
+    {
+        await actorService.AddNewActorAsync(obj);
+        NavigationManager.NavigateTo("Actors");
+    }
+    protected async void Cancel()
+    {
+        NavigationManager.NavigateTo("Actors");
+    }
+}

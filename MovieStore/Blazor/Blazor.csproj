@@ -1,10 +1,10 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>aspnet-Blazor-ce2408d0-f91b-47d6-bc19-13d222707720</UserSecretsId>
+    <UserSecretsId>aspnet-Blazor-d05c49a8-e1cb-414a-8d03-37d0552bb6b6</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -13,6 +13,11 @@
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.20" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.20" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.20" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Application\Application.csproj" />
+    <ProjectReference Include="..\Domain\Domain.csproj" />
   </ItemGroup>
 
 </Project>
