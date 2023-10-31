@@ -1,0 +1,64 @@
+﻿@page "/DeleteActor/{Id}"
+@using Application.Service.ActorSerice
+@using Domain.Models
+@inject ActorService actorService
+@inject NavigationManager NavigationManager
+
+<h3>Delete Actor</h3>
+<hr />
+
+<form>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="form-group">
+                <label for="Id" class="control-label">Actor Number</label>
+                <input form="Id" class="form-control" @bind="@obj.Id" />
+            </div>
+            <div class="form-group">
+                <label for="Picture" class="control-label">Picture</label>
+                <input form="Picture" class="form-control" @bind="@obj.ProfilePictureURL" readonly />
+                @if (!string.IsNullOrEmpty(obj.ProfilePictureURL))
+                {
+                    <img src="@obj.ProfilePictureURL" alt="Actor's Picture" width="100" height="100" />
+                }
+            </div>
+            <div class="form-group">
+                <label for="Bio" class="control-label">Bio</label>
+                <input form="Bio" class="form-control" @bind="@obj.Bio" />
+            </div>
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <input type="button" class="btn btn-primary btn-sm" @onclick="@DeleteActorRecordAsync" value="Delete Actor" />
+                <input type="button" class="btn btn-danger btn-sm" @onclick="@Cancel" value="Cancel" />
+            </div>
+        </div>
+    </div>
+</form>
+
+
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+    Actor obj = new Actor();
+
+    protected override async Task OnInitializedAsync()
+    {
+        obj = await Task.Run(() => actorService.GetActorByIdAsync(Convert.ToInt32(Id)));
+    }
+
+    protected async void DeleteActorRecordAsync()
+    {
+        await actorService.DeleteActorAsync(obj);
+        NavigationManager.NavigateTo("Actors");
+    }
+
+    protected async void Cancel()
+    {
+        NavigationManager.NavigateTo("Actors");
+    }
+}

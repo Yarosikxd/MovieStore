@@ -1,0 +1,75 @@
+﻿@page "/SearchActor"
+@using Domain.Models
+@using System.Linq
+@using Microsoft.EntityFrameworkCore
+@using Blazor.Data
+@inject AppDbContext _context
+@inject NavigationManager NavigationManager
+
+<input type="text" @bind="searchTerm" placeholder="Enter The Full Name For Searching">
+<button type="button" class="btn btn-primary btn-sm" @onclick="Search">Search</button>
+
+<h3>Search Actor</h3>
+<hr />
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Full Name Actor</th>
+            <th>Bio Actor</th>
+            <th>Picture Actor</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var actor in filteredActors)
+        {
+            <tr>
+                <td>@actor.Id</td>
+                <td>@actor.Bio</td>
+                <td>
+                    @if (!string.IsNullOrEmpty(actor.ProfilePictureURL))
+                    {
+                        <img src="@actor.ProfilePictureURL" alt="Actor's Picture" width="100" height="100" />
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="form-group">
+            <input type="button" class="btn btn-primary btn-sm" @onclick="@HideActorAsync" value="Hide Search" />
+        </div>
+    </div>
+</div>
+
+
+
+
+@code {
+    private string searchTerm = "";
+    private List<Actor> actors = new List<Actor>();
+
+    private List<Actor> filteredActors = new List<Actor>();
+
+    private void Search()
+    {
+        if (!string.IsNullOrWhiteSpace(searchTerm))
+        {
+            filteredActors = _context.Actors
+            .Where(actor => actor.FullName.Contains(searchTerm)).ToList();
+        }
+        else
+        {
+           filteredActors = _context.Actors.ToList();
+        }
+    }
+
+    protected async void HideActorAsync()
+    {
+
+        NavigationManager.NavigateTo("Actors");
+    }
+}
