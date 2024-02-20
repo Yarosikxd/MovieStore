@@ -1,0 +1,76 @@
+﻿@page "/SearchCinema"
+@using Domain.Models
+@using System.Linq
+@using Microsoft.EntityFrameworkCore
+@using Blazor.Data
+@inject AppDbContext _context
+@inject NavigationManager NavigationManager
+
+<input type="text" @bind="searchTerm" placeholder="Enter The Full Name For Searching">
+<button type="button" class="btn btn-primary btn-sm" @onclick="Search">Search</button>
+
+<h3>Search Cinema</h3>
+<hr />
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Name Cinema</th>
+            <th>Description Cinema</th>
+            <th>Logo Cinema</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var cinema in filteredCinemas)
+        {
+            <tr>
+                <td>@cinema.Id</td>
+                <td>@cinema.Description</td>
+                <td>
+                    @if (!string.IsNullOrEmpty(cinema.Logo))
+                    {
+                        <img src="@cinema.Logo" alt="Producer's Picture" width="100" height="100" />
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="form-group">
+            <input type="button" class="btn btn-primary btn-sm" @onclick="@HideCinemaAsync" value="Hide Search" />
+        </div>
+    </div>
+</div>
+
+
+
+
+@code {
+    private string searchTerm = "";
+    private List<Cinema> cinemas = new List<Cinema>();
+
+    private List<Cinema> filteredCinemas = new List<Cinema>();
+
+    private void Search()
+    {
+        if (!string.IsNullOrWhiteSpace(searchTerm))
+        {
+            filteredCinemas = _context.Cinemas
+            .Where(cinema => cinema.Name.Contains(searchTerm)).ToList();
+        }
+        else
+        {
+            filteredCinemas = _context.Cinemas.ToList();
+        }
+    }
+
+    protected async void HideCinemaAsync()
+    {
+
+        NavigationManager.NavigateTo("Cinemas");
+    }
+}
+

@@ -1,16 +1,17 @@
-﻿@page "/EditActor/{Id}"
-@using Application.Service.ActorSerice
+﻿@page "/DeleteProducer/{Id}"
+@using Application.Service.ProducerService
 @using Domain.Models
-@inject ActorService actorService
+@inject ProducerService producerService
 @inject NavigationManager NavigationManager
 
+<h3>Delete Producer</h3>
+<hr />
 
-<h3>Edit Actor</h3>
 <form>
     <div class="row">
         <div class="col-md-8">
             <div class="form-group">
-                <label for="Id" class="control-label">Actor Number</label>
+                <label for="Id" class="control-label">Producer Number</label>
                 <input form="Id" class="form-control" @bind="@obj.Id" />
             </div>
             <div class="form-group">
@@ -18,7 +19,7 @@
                 <input form="Picture" class="form-control" @bind="@obj.ProfilePictureURL" readonly />
                 @if (!string.IsNullOrEmpty(obj.ProfilePictureURL))
                 {
-                    <img src="@obj.ProfilePictureURL" alt="Actor's Picture" width="100" height="100" />
+                    <img src="@obj.ProfilePictureURL" alt="Producers Picture" width="100" height="100" />
                 }
             </div>
             <div class="form-group">
@@ -31,7 +32,7 @@
     <div class="row">
         <div class="col-md-4">
             <div class="form-group">
-                <input type="button" class="btn btn-primary btn-sm" @onclick="@UpdateActorAsync" value="Update Actor" />
+                <input type="button" class="btn btn-primary btn-sm" @onclick="@DeleteProducerRecordAsync" value="Delete Producer" />
                 <input type="button" class="btn btn-danger btn-sm" @onclick="@Cancel" value="Cancel" />
             </div>
         </div>
@@ -43,21 +44,21 @@
 @code {
     [Parameter]
     public string Id { get; set; }
-
-    Actor obj = new Actor();
+    Producer obj = new Producer();
 
     protected override async Task OnInitializedAsync()
     {
-        obj = await Task.Run(() => actorService.GetActorByIdAsync(Convert.ToInt32(Id)));
+        obj = await Task.Run(() => producerService.GetProducerByIdAsync(Convert.ToInt32(Id)));
     }
 
-    protected async void UpdateActorAsync()
+    protected async void DeleteProducerRecordAsync()
     {
-        await actorService.UpdateActorContentAsync(obj);
-        NavigationManager.NavigateTo("Actors");
+        await producerService.DeleteProducerAsync(obj);
+        NavigationManager.NavigateTo("Producers");
     }
+
     protected async void Cancel()
     {
-        NavigationManager.NavigateTo("Actors");
+        NavigationManager.NavigateTo("Producers");
     }
 }

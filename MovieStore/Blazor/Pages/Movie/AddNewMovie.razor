@@ -1,0 +1,114 @@
+﻿@page "/AddNewMovie"
+@using Domain.Models
+@using Domain.Enums
+@using Application.Service.MovieService
+@using Application.Service.ActorSerice
+@using Application.Service.CinemaService
+@using Application.Service.ProducerService
+@inject CinemaService cinemaService
+@inject ProducerService producerService
+@inject ActorService actorService
+@inject MovieService movieService
+@inject NavigationManager NavigationManager
+
+<h3>Add New Movie</h3>
+<hr />
+
+<EditForm Model="movie" OnValidSubmit="SaveMovie">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group">
+        <label for="Name">Name:</label>
+        <InputText id="Name" @bind-Value="movie.Name" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label for="Description">Description:</label>
+        <InputText id="Description" @bind-Value="movie.Description" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label for="Price">Price:</label>
+        <InputNumber id="Price" @bind-Value="movie.Price" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label for="StarttDate">Start Date:</label>
+        <InputDate id="StarttDate" @bind-Value="movie.StarttDate" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label for="EndDate">End Date:</label>
+        <InputDate id="EndDate" @bind-Value="movie.EndDate" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label for="MovieCategory">Category:</label>
+        <InputSelect id="MovieCategory" @bind-Value="movie.MovieCategory" class="form-control">
+            <option value="">Select a category</option>
+            @foreach (var category in Enum.GetValues(typeof(MovieCategory)))
+            {
+                <option value="@category">@category.ToString()</option>
+            }
+        </InputSelect>
+    </div>
+    <div class="form-group">
+        <label for="ImageURL">Image URL:</label>
+        <InputText id="ImageURL" @bind-Value="movie.ImageURL" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label for="Cinema">Cinema:</label>
+        <InputSelect id="Cinema" @bind-Value="movie.CinemaId" class="form-control">
+            <option value="">Select a cinema</option>
+            @foreach (var cinema in cinemas)
+            {
+                <option value="@cinema.Id">@cinema.Name</option>
+            }
+        </InputSelect>
+    </div>
+    <div class="form-group">
+        <label for="Producer">Producer:</label>
+        <InputSelect id="Producer" @bind-Value="movie.ProducerId" class="form-control">
+            <option value="">Select a producer</option>
+            @foreach (var producer in producers)
+            {
+                <option value="@producer.Id">@producer.FullName</option>
+            }
+        </InputSelect>
+    </div>
+ 
+
+
+    <button type="submit" class="btn btn-primary">Save Movie</button>
+</EditForm>
+
+@code {
+    private Movie movie = new Movie();
+    private List<Cinema> cinemas = new List<Cinema>();
+    private List<Producer> producers = new List<Producer>();
+    
+
+
+    [Parameter]
+    public int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        cinemas = await cinemaService.GetAllCinemasAsunc();
+        producers = await producerService.GetAllProducersAsunc();
+        
+        if (Id > 0)
+        {
+           movie = await movieService.GetMovieByIdAsync(Id);
+        }
+    }
+
+    private async Task SaveMovie()
+    {
+        if (Id > 0)
+        {
+           await movieService.UpdateMovieContentAsync(movie);
+        }
+        else
+        {
+           await movieService.AddNewMovieAsync(movie);
+        }
+        NavigationManager.NavigateTo("/Movies");
+    }
+}

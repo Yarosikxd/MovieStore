@@ -1,0 +1,54 @@
+﻿@page "/AddNewCinema"
+@using Domain.Models
+@using Application.Service.CinemaService
+@inject CinemaService cinemaService
+@inject NavigationManager NavigationManager
+
+<h3>Add New Cinema</h3>
+<hr />
+
+<form>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="for-group">
+                <label for="Name" class="control-label">Name</label>
+                <input form="Name" class="form-control" @bind="@obj.Name" />
+            </div>
+
+            <div class="for-group">
+                <label for="Logo" class="control-label">Logo</label>
+                <input form="Logo" class="form-control" @bind="@obj.Logo" />
+            </div>
+
+            <div class="for-group">
+                <label for="Description" class="control-label">Description</label>
+                <input form="Description" class="form-control" @bind="@obj.Description" />
+            </div>
+
+
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <input type="button" class="btn btn-primary btn-sm" @onclick="@CreateNewCinemaAsync" value="Save Cinema" />
+                <input type="button" class="btn btn-danger btn-sm" @onclick="@Cancel" value="Cancel" />
+            </div>
+        </div>
+    </div>
+</form>
+
+
+@code {
+    public Cinema obj = new Cinema();
+    protected async void CreateNewCinemaAsync()
+    {
+        await cinemaService.AddNewCinemaAsync(obj);
+        NavigationManager.NavigateTo("Cinemas");
+    }
+    protected async void Cancel()
+    {
+        NavigationManager.NavigateTo("Cinemas");
+    }
+}

@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Domain.Repository.ProducerRepository
 {
-    internal class ProducerRepository : IProducerRepository
+    public class ProducerRepository : IProducerRepository
     {
         private readonly AppDbContext _context;
         public ProducerRepository(AppDbContext context) {  _context = context; }

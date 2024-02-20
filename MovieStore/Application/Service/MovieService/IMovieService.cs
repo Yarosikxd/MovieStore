@@ -10,5 +10,7 @@ namespace Application.Service.MovieService
         Task<Movie> GetMovieByIdAsync(int id);
         Task<bool> UpdateMovieContentAsync(Movie movie);
         Task<bool> DeleteMovieAsync(Movie movie);
+        Task<bool> AddActorToMovieAsync(int movieId, int actorId);
+
     }
 }

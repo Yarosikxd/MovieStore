@@ -8,6 +8,16 @@ namespace Domain.Repository.MovieRepository
     {
         private readonly AppDbContext _context;
         public MovieRepository(AppDbContext context) {  _context = context; }
+
+        public async Task<bool> AddActorToMovieAsync(int movieId, int actorId)
+        {
+            var movie =  await _context.Movies.FirstOrDefaultAsync(m => m.Id == movieId);
+            var actor = await _context.Actors_Movies.FirstOrDefaultAsync(a => a.ActorId == actorId);
+            movie.Actors_Movies.Add(actor);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
         public async Task<bool> AddNewMovieAsync(Movie movie)
         {
             await _context.Movies.AddAsync(movie);

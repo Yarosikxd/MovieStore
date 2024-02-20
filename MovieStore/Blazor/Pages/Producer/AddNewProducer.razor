@@ -1,0 +1,54 @@
+﻿@page "/AddNewProducer"
+@using Domain.Models
+@using Application.Service.ProducerService
+@inject ProducerService producerService
+@inject NavigationManager NavigationManager
+
+<h3>Add New Producer</h3>
+<hr />
+
+<form>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="for-group">
+                <label for="Name" class="control-label">FullName</label>
+                <input form="FullName" class="form-control" @bind="@obj.FullName" />
+            </div>
+
+            <div class="for-group">
+                <label for="PictureUrl" class="control-label">PictureUrl</label>
+                <input form="PictureUrl" class="form-control" @bind="@obj.ProfilePictureURL" />
+            </div>
+
+            <div class="for-group">
+                <label for="Bio" class="control-label">Bio</label>
+                <input form="Bio" class="form-control" @bind="@obj.Bio" />
+            </div>
+
+           
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <input type="button" class="btn btn-primary btn-sm" @onclick="@CreateNewProducerAsync" value="Save Producer" />
+                <input type="button" class="btn btn-danger btn-sm" @onclick="@Cancel" value="Cancel" />
+            </div>
+        </div>
+    </div>
+</form>
+
+
+@code {
+    public Producer obj = new Producer();
+    protected async void CreateNewProducerAsync()
+    {
+        await producerService.AddNewProducerAsync(obj);
+        NavigationManager.NavigateTo("Producers");
+    }
+    protected async void Cancel()
+    {
+        NavigationManager.NavigateTo("Producers");
+    }
+}

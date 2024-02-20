@@ -1,0 +1,64 @@
+﻿@page "/EditCinema/{Id}"
+@using Application.Service.CinemaService
+@using Domain.Models
+@inject CinemaService cinemaService
+@inject NavigationManager NavigationManager
+
+
+<h3>Edit Cinema</h3>
+<form>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="form-group">
+                <label for="Id" class="control-label">Producer Number</label>
+                <input form="Id" class="form-control" @bind="@obj.Id" />
+            </div>
+            <div class="form-group">
+                <label for="Logo" class="control-label">Logo</label>
+                <input form="Logo" class="form-control" @bind="@obj.Logo" readonly />
+                @if (!string.IsNullOrEmpty(obj.Logo))
+                {
+                    <img src="@obj.Logo" alt="Cinemas Logo" width="100" height="100" />
+                }
+            </div>
+            <div class="form-group">
+                <label for="Description" class="control-label">Description</label>
+                <input form="Description" class="form-control" @bind="@obj.Description" />
+            </div>
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <input type="button" class="btn btn-primary btn-sm" @onclick="@UpdateCinemaAsync" value="Update Cinema" />
+                <input type="button" class="btn btn-danger btn-sm" @onclick="@Cancel" value="Cancel" />
+            </div>
+        </div>
+    </div>
+</form>
+
+
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+
+    Cinema obj = new Cinema();
+
+    protected override async Task OnInitializedAsync()
+    {
+        obj = await Task.Run(() => cinemaService.GetCinemaByIdAsync(Convert.ToInt32(Id)));
+    }
+
+    protected async void UpdateCinemaAsync()
+    {
+        await cinemaService.UpdateCinemaContentAsync(obj);
+        NavigationManager.NavigateTo("Cinemas");
+    }
+    protected async void Cancel()
+    {
+        NavigationManager.NavigateTo("Cinemas");
+    }
+}
+
